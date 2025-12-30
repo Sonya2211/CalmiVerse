@@ -109,8 +109,6 @@ ipython==8.18.1
 ipywidgets==8.1.5
 isoduration==20.11.0
 itsdangerous==2.2.0
-jax==0.4.30
-jaxlib==0.4.30
 jedi==0.19.2
 Jinja2==3.1.5
 jmespath==1.0.1
@@ -337,4 +335,5 @@ wsproto==1.2.0
 xgboost==2.1.4
 yarl==1.18.3
 zipp==3.21.0
+
 

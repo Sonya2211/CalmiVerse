@@ -147,7 +147,6 @@ matplotlib==3.5.3
 matplotlib-inline==0.1.7
 mattermostwrapper==2.2
 mdurl==0.1.2
-mediapipe==0.10.7
 mistune==3.1.2
 ml_dtypes==0.5.1
 mltu==1.2.5
@@ -335,5 +334,6 @@ wsproto==1.2.0
 xgboost==2.1.4
 yarl==1.18.3
 zipp==3.21.0
+
 
 

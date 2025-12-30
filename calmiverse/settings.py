@@ -7,18 +7,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-ALLOWED_HOSTS = [
-    "calmiverse.onrender.com",
-    ".onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
-CSRF_TRUSTED_ORIGINS = [
-    "https://calmiverse.onrender.com",
-]
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
 # --------------------------------------------------
 # BASE DIR
 # --------------------------------------------------
@@ -37,10 +25,18 @@ SECRET_KEY = "django-insecure-^vc*@bpk*jgmbeiflduxwakfejpm)rsx^b2l3^ex*9p45&6^-3
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
+    "calmiverse.onrender.com",
+    ".onrender.com",
     "localhost",
-    ".devtunnels.ms",  # REQUIRED for DevTunnel
+    "127.0.0.1",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://calmiverse.onrender.com",
+]
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # --------------------------------------------------
 # APPLICATIONS

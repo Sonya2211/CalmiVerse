@@ -1,0 +1,1311 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<style>
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes progressBar {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-15px) rotate(2deg);
+    }
+    66% {
+      transform: translateY(-8px) rotate(-2deg);
+    }
+  }
+
+  @keyframes wave-flow {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-fadeInDown {
+    animation: fadeInDown 0.5s ease-out;
+  }
+
+  .animate-progressBar {
+    animation: progressBar 3s linear forwards;
+  }
+
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.95)
+    );
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(20, 184, 166, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .glass-card {
+      backdrop-filter: blur(12px);
+    }
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(white, white) padding-box,
+      linear-gradient(135deg, #0ea5e9, #10b981, #6366f1) border-box;
+    border: 2px solid transparent;
+  }
+
+  @media (max-width: 768px) {
+    .gradient-border {
+      border-width: 1px;
+    }
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 40px rgba(20, 184, 166, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .hover-glow:hover {
+      box-shadow: 0 0 20px rgba(20, 184, 166, 0.2);
+    }
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #0ea5e9, #10b981, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .neon-text {
+    text-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    .neon-text {
+      text-shadow: 0 0 10px rgba(20, 184, 166, 0.3);
+    }
+  }
+
+  /* IMPROVED Brain Wave Animation Styles */
+  .brain-wave-container {
+    background: linear-gradient(to bottom, #0f172a, #1e293b);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    height: 120px;
+  }
+
+  @media (min-width: 768px) {
+    .brain-wave-container {
+      height: 150px;
+      border-radius: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .brain-wave-container {
+      height: 200px;
+      border-radius: 24px;
+    }
+  }
+
+  .brain-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: wave-flow 4s linear infinite;
+    border-radius: 50% 50% 0 0;
+    opacity: 0.8;
+  }
+
+  .brain-wave-1 {
+    animation-delay: 0s;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(20, 184, 166, 0.8) 20%,
+      rgba(20, 184, 166, 0.9) 50%,
+      rgba(20, 184, 166, 0.8) 80%,
+      transparent 100%
+    );
+    filter: drop-shadow(0 0 10px rgba(20, 184, 166, 0.3));
+    height: 80%;
+  }
+
+  .brain-wave-2 {
+    animation-delay: 0.5s;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(6, 182, 212, 0.7) 20%,
+      rgba(6, 182, 212, 0.8) 50%,
+      rgba(6, 182, 212, 0.7) 80%,
+      transparent 100%
+    );
+    height: 65%;
+    filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.3));
+  }
+
+  .brain-wave-3 {
+    animation-delay: 1s;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(139, 92, 246, 0.6) 20%,
+      rgba(139, 92, 246, 0.7) 50%,
+      rgba(139, 92, 246, 0.6) 80%,
+      transparent 100%
+    );
+    height: 50%;
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3));
+  }
+
+  .brain-wave-4 {
+    animation-delay: 1.5s;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(245, 158, 11, 0.5) 20%,
+      rgba(245, 158, 11, 0.6) 50%,
+      rgba(245, 158, 11, 0.5) 80%,
+      transparent 100%
+    );
+    height: 40%;
+    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.3));
+  }
+
+  .brain-wave-5 {
+    animation-delay: 2s;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(236, 72, 153, 0.4) 20%,
+      rgba(236, 72, 153, 0.5) 50%,
+      rgba(236, 72, 153, 0.4) 80%,
+      transparent 100%
+    );
+    height: 35%;
+    filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.3));
+  }
+
+  /* IMPROVED Wave Labels with better spacing */
+  .wave-labels-container {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .wave-labels-container {
+      top: 15px;
+      padding: 0 15px;
+    }
+  }
+
+  .wave-label {
+    font-size: 9px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: white;
+    opacity: 0.9;
+    padding: 2px 4px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 640px) {
+    .wave-label {
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 10px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .wave-label {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+  }
+
+  .wave-label-1 {
+    color: #14b8a6;
+  }
+  .wave-label-2 {
+    color: #06b6d4;
+  }
+  .wave-label-3 {
+    color: #8b5cf6;
+  }
+  .wave-label-4 {
+    color: #f59e0b;
+  }
+  .wave-label-5 {
+    color: #ec4899;
+  }
+
+  /* Brain Waves Grid Improvements */
+  .brain-wave-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .brain-wave-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .brain-wave-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+  }
+
+  .wave-item {
+    text-align: center;
+    padding: 12px 8px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: help;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .wave-item {
+      padding: 16px 12px;
+      border-radius: 16px;
+    }
+  }
+
+  .wave-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .wave-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .wave-item:hover::after {
+    content: attr(data-frequency);
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Therapy Card Styles */
+  .therapy-step {
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+  }
+
+  @media (min-width: 768px) {
+    .therapy-step {
+      border-left-width: 4px;
+    }
+  }
+
+  .therapy-step:hover {
+    border-left-color: #14b8a6;
+    transform: translateX(3px);
+    background: rgba(20, 184, 166, 0.05);
+  }
+
+  @media (min-width: 768px) {
+    .therapy-step:hover {
+      transform: translateX(5px);
+    }
+  }
+
+  /* Hide floating elements on mobile */
+  @media (max-width: 768px) {
+    .floating-element {
+      display: none;
+    }
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 40;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-menu.active {
+    display: block;
+  }
+
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    .hover-glow:hover,
+    .therapy-step:hover,
+    .wave-item:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .wave-item:hover::after {
+      content: none;
+    }
+  }
+
+  /* Ensure no horizontal scrolling */
+  @media (max-width: 768px) {
+    body {
+      overflow-x: hidden;
+    }
+
+    .container-mobile {
+      width: 100%;
+      max-width: 100%;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  /* Responsive table */
+  @media (max-width: 768px) {
+    .responsive-table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -1rem;
+      padding: 0 1rem;
+    }
+
+    .responsive-table {
+      min-width: 600px;
+    }
+  }
+</style>
+
+<!-- ================= FLASH MESSAGES ================= -->
+{% if messages %}
+<div
+  class="fixed top-4 sm:top-6 right-4 sm:right-6 z-50 space-y-2 sm:space-y-3 max-w-[90vw] sm:max-w-sm"
+>
+  {% for message in messages %}
+  <div
+    class="relative px-4 py-3 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl backdrop-blur-sm {% if message.tags == 'success' %} bg-gradient-to-r from-emerald-500/90 to-emerald-600/90 text-white border border-emerald-400/30 {% else %} bg-gradient-to-r from-rose-500/90 to-rose-600/90 text-white border border-rose-400/30 {% endif %} animate-fadeInDown"
+  >
+    <div class="flex items-center gap-2 sm:gap-3">
+      <span class="text-base sm:text-lg"
+        >{% if message.tags == 'success' %}✓{% else %}⚠{% endif %}</span
+      >
+      <span class="font-medium text-xs sm:text-sm">{{ message }}</span>
+    </div>
+    <div
+      class="absolute bottom-0 left-0 h-1 bg-white/30 rounded-full w-full overflow-hidden"
+    >
+      <div class="h-full bg-white animate-progressBar"></div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ================= HERO SECTION ================= -->
+<section
+  class="relative overflow-hidden mt-16 mb-12 sm:mb-20 md:mb-40 container-mobile"
+>
+  <!-- Background Elements -->
+  <div class="absolute inset-0 -z-10">
+    <div
+      class="absolute top-1/4 left-1/4 w-32 sm:w-48 md:w-72 h-32 sm:h-48 md:h-72 bg-teal-300/20 rounded-full blur-xl sm:blur-2xl md:blur-3xl"
+    ></div>
+    <div
+      class="absolute bottom-1/4 right-1/4 w-40 sm:w-64 md:w-96 h-40 sm:h-64 md:h-96 bg-cyan-300/20 rounded-full blur-xl sm:blur-2xl md:blur-3xl"
+    ></div>
+  </div>
+
+  <div class="max-w-6xl lg:max-w-7xl mx-auto px-4 sm:px-6 relative">
+    <!-- Floating Logo -->
+    <div class="flex justify-center mb-6 sm:mb-8 md:mb-12">
+      <div class="relative">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400 rounded-full blur-lg sm:blur-xl opacity-70 animate-pulse"
+        ></div>
+        <div
+          class="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full glass-card flex items-center justify-center shadow-xl sm:shadow-2xl animate-float"
+        >
+          <div
+            class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center"
+          >
+            <span class="text-white text-base sm:text-xl md:text-2xl font-bold"
+              >AI</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Heading -->
+    <div class="text-center mb-6 sm:mb-8 px-2">
+      <h1
+        class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-slate-900 mb-2 sm:mb-4"
+      >
+        Welcome to
+        <span class="text-gradient neon-text">CalmiVerse</span>
+      </h1>
+      <p
+        class="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 font-light"
+      >
+        Your <span class="font-semibold text-teal-600">Intelligent</span> Mental
+        Wellness Companion
+      </p>
+    </div>
+
+    <!-- Tagline -->
+    <div class="max-w-3xl mx-auto text-center mb-8 sm:mb-12 px-2">
+      <p
+        class="text-sm sm:text-base md:text-lg text-slate-500 leading-relaxed font-medium glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8"
+      >
+        Where cutting-edge
+        <span class="font-bold text-cyan-600">AI technology</span> meets
+        compassionate care. Experience a revolutionary ecosystem designed for
+        your <span class="font-bold text-teal-600">mental well-being</span>.
+      </p>
+    </div>
+
+    <!-- Stats Bar - MOBILE FRIENDLY GRID -->
+    <div
+      class="stats-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16 px-2"
+    >
+      <div
+        class="text-center p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl glass-card transition-all duration-300"
+      >
+        <div
+          class="text-lg sm:text-xl md:text-3xl font-bold text-teal-600 mb-1 sm:mb-2"
+        >
+          24/7
+        </div>
+        <div class="text-xs sm:text-sm text-slate-600 font-medium">
+          Available Support
+        </div>
+      </div>
+      <div
+        class="text-center p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl glass-card transition-all duration-300"
+      >
+        <div
+          class="text-lg sm:text-xl md:text-3xl font-bold text-cyan-600 mb-1 sm:mb-2"
+        >
+          100%
+        </div>
+        <div class="text-xs sm:text-sm text-slate-600 font-medium">
+          Private & Secure
+        </div>
+      </div>
+      <div
+        class="text-center p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl glass-card transition-all duration-300"
+      >
+        <div
+          class="text-lg sm:text-xl md:text-3xl font-bold text-blue-600 mb-1 sm:mb-2"
+        >
+          AI-Powered
+        </div>
+        <div class="text-xs sm:text-sm text-slate-600 font-medium">
+          Personalized Care
+        </div>
+      </div>
+      <div
+        class="text-center p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl glass-card transition-all duration-300"
+      >
+        <div
+          class="text-lg sm:text-xl md:text-3xl font-bold text-violet-600 mb-1 sm:mb-2"
+        >
+          Evidence-Based
+        </div>
+        <div class="text-xs sm:text-sm text-slate-600 font-medium">
+          Therapeutic Methods
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IMPROVED BRAIN SCIENCE SECTION ================= -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-20 md:mb-40">
+  <div class="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
+    <!-- Left: Improved Brain Waves Section -->
+    <div
+      class="glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 gradient-border mb-6 sm:mb-0"
+    >
+      <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+        <div
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center"
+        >
+          <i class="fas fa-brain text-white text-sm sm:text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
+            Brain Waves Science
+          </h3>
+          <p class="text-slate-500 text-xs sm:text-sm">
+            Understanding your brain's rhythms
+          </p>
+        </div>
+      </div>
+
+      <!-- Improved Brain Wave Animation -->
+      <div
+        class="brain-wave-container rounded-xl sm:rounded-2xl overflow-hidden mb-4 sm:mb-6 md:mb-8"
+      >
+        <!-- Improved Labels Container with Better Spacing -->
+        <div class="wave-labels-container">
+          <div class="wave-label wave-label-1">Delta</div>
+          <div class="wave-label wave-label-2">Theta</div>
+          <div class="wave-label wave-label-3">Alpha</div>
+          <div class="wave-label wave-label-4">Beta</div>
+          <div class="wave-label wave-label-5">Gamma</div>
+        </div>
+
+        <!-- 5 Brain Waves with Different Heights and Speeds -->
+        <div class="brain-wave brain-wave-1"></div>
+        <div class="brain-wave brain-wave-2"></div>
+        <div class="brain-wave brain-wave-3"></div>
+        <div class="brain-wave brain-wave-4"></div>
+        <div class="brain-wave brain-wave-5"></div>
+      </div>
+
+      <!-- Improved Brain Waves Grid -->
+      <div class="brain-wave-grid">
+        <div
+          class="wave-item bg-purple-50 border border-purple-100"
+          data-frequency="0.5-4 Hz"
+          title="Deep sleep, healing, regeneration"
+        >
+          <div class="text-xs sm:text-sm font-bold text-purple-700 mb-1">
+            Delta
+          </div>
+          <div class="text-xs text-slate-600">Deep Sleep</div>
+          <div class="text-[10px] sm:text-[10px] text-purple-400 mt-1">
+            0.5-4 Hz
+          </div>
+        </div>
+        <div
+          class="wave-item bg-blue-50 border border-blue-100"
+          data-frequency="4-8 Hz"
+          title="Meditation, creativity, intuition"
+        >
+          <div class="text-xs sm:text-sm font-bold text-blue-700 mb-1">
+            Theta
+          </div>
+          <div class="text-xs text-slate-600">Meditation</div>
+          <div class="text-[10px] sm:text-[10px] text-blue-400 mt-1">
+            4-8 Hz
+          </div>
+        </div>
+        <div
+          class="wave-item bg-teal-50 border border-teal-100"
+          data-frequency="8-12 Hz"
+          title="Relaxation, calmness, alertness"
+        >
+          <div class="text-xs sm:text-sm font-bold text-teal-700 mb-1">
+            Alpha
+          </div>
+          <div class="text-xs text-slate-600">Relaxation</div>
+          <div class="text-[10px] sm:text-[10px] text-teal-400 mt-1">
+            8-12 Hz
+          </div>
+        </div>
+        <div
+          class="wave-item bg-amber-50 border border-amber-100"
+          data-frequency="12-30 Hz"
+          title="Focus, concentration, problem-solving"
+        >
+          <div class="text-xs sm:text-sm font-bold text-amber-700 mb-1">
+            Beta
+          </div>
+          <div class="text-xs text-slate-600">Focus</div>
+          <div class="text-[10px] sm:text-[10px] text-amber-400 mt-1">
+            12-30 Hz
+          </div>
+        </div>
+        <div
+          class="wave-item bg-rose-50 border border-rose-100"
+          data-frequency="30-100 Hz"
+          title="Cognition, learning, memory"
+        >
+          <div class="text-xs sm:text-sm font-bold text-rose-700 mb-1">
+            Gamma
+          </div>
+          <div class="text-xs text-slate-600">Cognition</div>
+          <div class="text-[10px] sm:text-[10px] text-rose-400 mt-1">
+            30-100 Hz
+          </div>
+        </div>
+        <div
+          class="wave-item bg-cyan-50 border border-cyan-100"
+          data-frequency="Custom"
+          title="Synchronized brain hemispheres"
+        >
+          <div class="text-xs sm:text-sm font-bold text-cyan-700 mb-1">
+            Binaural
+          </div>
+          <div class="text-xs text-slate-600">Brain Sync</div>
+          <div class="text-[10px] sm:text-[10px] text-cyan-400 mt-1">
+            Therapeutic
+          </div>
+        </div>
+      </div>
+
+      <!-- Frequency Explanation -->
+      <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-100">
+        <p class="text-xs sm:text-sm text-slate-600 text-center">
+          <span class="font-semibold text-purple-600"
+            >Hz = Hertz (cycles per second)</span
+          >
+          • Each brain wave frequency corresponds to different mental states
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: Therapy Approach -->
+    <div
+      class="glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 gradient-border"
+    >
+      <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+        <div
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center"
+        >
+          <i class="fas fa-heart text-white text-sm sm:text-lg"></i>
+        </div>
+        <div>
+          <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
+            Our Therapy Approach
+          </h3>
+          <p class="text-slate-500 text-xs sm:text-sm">
+            Visual Art + Binaural Beats
+          </p>
+        </div>
+      </div>
+
+      <!-- Therapy Steps -->
+      <div class="space-y-3 sm:space-y-4">
+        <div class="therapy-step p-3 sm:p-4 rounded-lg sm:rounded-xl">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0"
+            >
+              <span class="text-teal-600 font-bold text-xs sm:text-sm">1</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-1">
+                Expression Beyond Words
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Art lets your subconscious speak through colors and shapes
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="therapy-step p-3 sm:p-4 rounded-lg sm:rounded-xl">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0"
+            >
+              <span class="text-blue-600 font-bold text-xs sm:text-sm">2</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-1">
+                Brain Synchronization
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Binaural beats guide brain into relaxed states (Alpha/Theta)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="therapy-step p-3 sm:p-4 rounded-lg sm:rounded-xl">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0"
+            >
+              <span class="text-purple-600 font-bold text-xs sm:text-sm"
+                >3</span
+              >
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-1">
+                Emotional Regulation
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Calms nervous system and reduces stress hormones
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="therapy-step p-3 sm:p-4 rounded-lg sm:rounded-xl">
+          <div class="flex items-start gap-2 sm:gap-3">
+            <div
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0"
+            >
+              <span class="text-rose-600 font-bold text-xs sm:text-sm">4</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-1">
+                Neuroplastic Healing
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Creates new neural pathways for emotional resilience
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conditions -->
+      <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-100">
+        <h4 class="font-bold text-slate-800 mb-3 sm:mb-4 text-sm sm:text-base">
+          Effective For:
+        </h4>
+        <div class="flex flex-wrap gap-1 sm:gap-2">
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700 font-medium"
+            >Stress</span
+          >
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700 font-medium"
+            >Depression</span
+          >
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-purple-100 text-purple-700 font-medium"
+            >PTSD</span
+          >
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700 font-medium"
+            >ADHD</span
+          >
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-teal-100 text-teal-700 font-medium"
+            >Anxiety</span
+          >
+          <span
+            class="px-2 py-1 rounded-full text-xs bg-cyan-100 text-cyan-700 font-medium"
+            >Sleep</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY CHOOSE ================= -->
+<section class="mb-12 sm:mb-20 md:mb-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div
+      class="flex items-center justify-center gap-2 sm:gap-4 mb-6 sm:mb-8 md:mb-12 px-2"
+    >
+      <div
+        class="h-px flex-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent"
+      ></div>
+      <h2
+        class="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 text-center"
+      >
+        Why Choose CalmiVerse
+      </h2>
+      <div
+        class="h-px flex-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent"
+      ></div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      <!-- Main Features Card -->
+      <div
+        class="md:col-span-2 glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-10 gradient-border hover-glow transition-all duration-500"
+      >
+        <div class="grid sm:grid-cols-2 gap-3 sm:gap-6">
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >Evidence-based therapeutic techniques</span
+            >
+          </div>
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >Complete privacy and security</span
+            >
+          </div>
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >Track your progress over time</span
+            >
+          </div>
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >Personalized recommendations</span
+            >
+          </div>
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >No judgment, just support</span
+            >
+          </div>
+          <div
+            class="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl hover:bg-white/50 transition-all duration-300"
+          >
+            <div class="relative">
+              <div
+                class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <span class="text-xs sm:text-sm">✓</span>
+              </div>
+            </div>
+            <span
+              class="text-slate-700 font-medium leading-relaxed text-sm sm:text-base"
+              >Access anytime, anywhere</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Support Card -->
+      <div
+        class="relative overflow-hidden rounded-xl sm:rounded-2xl md:rounded-3xl group h-full"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
+        ></div>
+        <div
+          class="absolute -right-10 sm:-right-20 -top-10 sm:-top-20 w-40 sm:w-60 h-40 sm:h-60 bg-teal-500/20 rounded-full blur-xl sm:blur-3xl group-hover:scale-125 transition-transform duration-700"
+        ></div>
+        <div
+          class="absolute -left-10 sm:-left-20 -bottom-10 sm:-bottom-20 w-40 sm:w-60 h-40 sm:h-60 bg-cyan-500/20 rounded-full blur-xl sm:blur-3xl group-hover:scale-125 transition-transform duration-700"
+        ></div>
+        <div
+          class="relative p-6 sm:p-8 md:p-10 h-full flex flex-col justify-between"
+        >
+          <div>
+            <div
+              class="text-3xl sm:text-4xl md:text-5xl mb-4 sm:mb-6 font-light text-white"
+            >
+              24/7
+            </div>
+            <h3
+              class="text-xl sm:text-2xl md:text-3xl font-black text-white mb-3 sm:mb-4"
+            >
+              Always Active
+            </h3>
+            <p
+              class="text-slate-300 font-medium leading-relaxed text-sm sm:text-base"
+            >
+              Our AI never sleeps. 24/7 support whenever you need a safe space
+              to share, heal, and grow.
+            </p>
+          </div>
+          <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-700">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div
+                class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-400 animate-ping"
+              ></div>
+              <span class="text-green-400 font-semibold text-xs sm:text-sm"
+                >LIVE & READY</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ECOSYSTEM ================= -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-20 md:mb-40">
+  <div class="text-center mb-8 sm:mb-12 md:mb-16 px-2">
+    <h2
+      class="text-3xl sm:text-4xl md:text-5xl font-black mb-4 sm:mb-6 text-slate-900"
+    >
+      <span class="text-gradient">The Ecosystem</span>
+    </h2>
+    <p class="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
+      A complete suite of tools designed for comprehensive mental wellness
+      support
+    </p>
+  </div>
+
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+    <!-- Video Therapy Card -->
+    <div class="group relative">
+      <div
+        class="absolute -inset-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-xl sm:rounded-2xl md:rounded-3xl blur opacity-20 sm:opacity-30 group-hover:opacity-50 sm:group-hover:opacity-70 transition duration-500"
+      ></div>
+      <div
+        class="relative glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 h-full hover-glow transition-all duration-500 group-hover:-translate-y-2"
+      >
+        <div
+          class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-6 font-light text-teal-600 group-hover:scale-110 transition-transform duration-300"
+        >
+          VT
+        </div>
+        <h3
+          class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-2 sm:mb-3 md:mb-4"
+        >
+          Video Therapy
+        </h3>
+        <p class="text-slate-600 text-sm sm:text-base mb-4 sm:mb-6">
+          Professional therapeutic sessions with licensed mental health experts
+        </p>
+        <div
+          class="inline-flex items-center gap-1 sm:gap-2 text-teal-600 font-semibold text-sm sm:text-base group-hover:gap-3 sm:group-hover:gap-4 transition-all duration-300"
+        >
+          <span>Explore</span>
+          <span class="text-lg sm:text-xl">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Companion Card -->
+    <div class="group relative">
+      <div
+        class="absolute -inset-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-xl sm:rounded-2xl md:rounded-3xl blur opacity-20 sm:opacity-30 group-hover:opacity-50 sm:group-hover:opacity-70 transition duration-500"
+      ></div>
+      <div
+        class="relative glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 h-full hover-glow transition-all duration-500 group-hover:-translate-y-2"
+      >
+        <div
+          class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-6 font-light text-teal-600 group-hover:scale-110 transition-transform duration-300"
+        >
+          AI
+        </div>
+        <h3
+          class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-2 sm:mb-3 md:mb-4"
+        >
+          AI Companion
+        </h3>
+        <p class="text-slate-600 text-sm sm:text-base mb-4 sm:mb-6">
+          Your empathetic AI friend, always ready to listen and support you
+        </p>
+        <div
+          class="inline-flex items-center gap-1 sm:gap-2 text-teal-600 font-semibold text-sm sm:text-base group-hover:gap-3 sm:group-hover:gap-4 transition-all duration-300"
+        >
+          <span>Explore</span>
+          <span class="text-lg sm:text-xl">→</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOS Protocol Card -->
+    <div class="group relative">
+      <div
+        class="absolute -inset-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-xl sm:rounded-2xl md:rounded-3xl blur opacity-20 sm:opacity-30 group-hover:opacity-50 sm:group-hover:opacity-70 transition duration-500"
+      ></div>
+      <div
+        class="relative glass-card rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-10 h-full hover-glow transition-all duration-500 group-hover:-translate-y-2"
+      >
+        <div
+          class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-6 font-light text-teal-600 group-hover:scale-110 transition-transform duration-300"
+        >
+          SOS
+        </div>
+        <h3
+          class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-2 sm:mb-3 md:mb-4"
+        >
+          SOS Protocol
+        </h3>
+        <p class="text-slate-600 text-sm sm:text-base mb-4 sm:mb-6">
+          Immediate emergency assistance with verified crisis resources
+        </p>
+        <div
+          class="inline-flex items-center gap-1 sm:gap-2 text-teal-600 font-semibold text-sm sm:text-base group-hover:gap-3 sm:group-hover:gap-4 transition-all duration-300"
+        >
+          <span>Explore</span>
+          <span class="text-lg sm:text-xl">→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SIMPLIFIED FOOTER ================= -->
+<footer
+  class="bg-gradient-to-b from-white via-white/95 to-teal-50/30 border-t border-slate-200/50"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+    <!-- Profile + Research -->
+    <div
+      class="grid md:grid-cols-2 gap-8 items-center mb-10 glass-card rounded-3xl p-6 md:p-10"
+    >
+      <!-- LEFT: PHOTO + BASIC INFO -->
+      <div class="flex flex-col sm:flex-row items-center gap-6">
+        {% load static %}
+
+        <img
+          src="{% static 'images/profilepicture.jpeg' %}"
+          alt="Shankar Bhimappa Parit"
+          class="w-36 h-36 rounded-2xl object-cover shadow-xl border-4 border-white"
+        />
+
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-black text-slate-900">
+            Shankar Bhimappa Parit
+          </h3>
+          <p class="text-teal-600 font-semibold mt-1">B. Sc. Agriculture</p>
+          <p class="text-slate-600 mt-2 text-sm">
+            📞 <span class="font-medium">9322117889</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: RESEARCH INFO -->
+      <div>
+        <h4 class="text-xl font-bold text-slate-900 mb-3">Research Focus</h4>
+        <p class="text-slate-600 text-sm leading-relaxed mb-3">
+          <span class="font-semibold text-teal-600">
+            Combined Visual Arts & Binaural Beats Therapy
+          </span>
+          explores the impact of multisensory visual–auditory stimulation on
+          mental well-being.
+        </p>
+
+        <p class="text-slate-600 text-sm leading-relaxed mb-3">
+          A survey-based study indicated that this combined approach is
+          associated with improved psychological outcomes, including
+          <span class="font-medium">reduced stress and anxiety</span> and
+          <span class="font-medium"
+            >enhanced emotional regulation and focus</span
+          >.
+        </p>
+
+        <p class="text-slate-600 text-sm leading-relaxed">
+          The findings suggest a potential
+          <span class="font-medium">synergistic effect</span> of visual–auditory
+          stimulation. While theoretical support is strong, further controlled
+          studies are required—making this an innovative and promising area for
+          future research and experimentation.
+        </p>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="h-px bg-slate-200 mb-8"></div>
+
+    <!-- Bottom Footer -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="text-slate-500 text-sm text-center sm:text-left">
+        © 2024 <span class="font-bold text-slate-700">CalmiVerse</span> —
+        AI-Driven Mental Wellness Platform
+      </div>
+
+      <div class="flex items-center gap-6 text-sm text-slate-500">
+        <a href="/privacy_policy/" class="hover:text-teal-600">Privacy</a>
+        <a href="/terms_of_service/" class="hover:text-teal-600">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Auto-remove flash messages after 3 seconds
+  setTimeout(() => {
+    document.querySelectorAll(".animate-fadeInDown").forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(-20px)";
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 3000);
+
+  // Tooltip for brain wave items
+  document.querySelectorAll(".wave-item").forEach((item) => {
+    let tooltip = null;
+
+    item.addEventListener("mouseenter", function () {
+      if (window.innerWidth > 768) {
+        const title = this.getAttribute("title");
+        if (title && !tooltip) {
+          tooltip = document.createElement("div");
+          tooltip.className =
+            "fixed z-50 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg";
+          tooltip.textContent = title;
+          document.body.appendChild(tooltip);
+
+          const rect = this.getBoundingClientRect();
+          tooltip.style.left = `${rect.left + rect.width / 2}px`;
+          tooltip.style.top = `${rect.top - 40}px`;
+          tooltip.style.transform = "translateX(-50%)";
+        }
+      }
+    });
+
+    item.addEventListener("mouseleave", function () {
+      if (tooltip) {
+        tooltip.remove();
+        tooltip = null;
+      }
+    });
+
+    // Touch events for mobile
+    item.addEventListener("touchstart", function (e) {
+      e.preventDefault();
+      const title = this.getAttribute("title");
+      if (title) {
+        // Show alert on mobile
+        alert(title);
+      }
+    });
+  });
+
+  // Prevent horizontal scrolling on mobile
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.innerWidth < 768) {
+      document.body.style.overflowX = "hidden";
+    }
+  });
+
+  // Handle window resize
+  window.addEventListener("resize", function () {
+    if (window.innerWidth < 768) {
+      document.body.style.overflowX = "hidden";
+    } else {
+      document.body.style.overflowX = "auto";
+    }
+  });
+
+  // Initialize ScrollReveal
+  if (typeof ScrollReveal !== "undefined") {
+    ScrollReveal().reveal(".reveal-top", {
+      distance: "30px",
+      origin: "top",
+      duration: 1000,
+      delay: 200,
+      easing: "cubic-bezier(0.5, 0, 0, 1)",
+      interval: 100,
+    });
+
+    ScrollReveal().reveal(".reveal-bottom", {
+      distance: "30px",
+      origin: "bottom",
+      duration: 1000,
+      delay: 200,
+      easing: "cubic-bezier(0.5, 0, 0, 1)",
+      interval: 100,
+    });
+
+    ScrollReveal().reveal(".reveal-left", {
+      distance: "30px",
+      origin: "left",
+      duration: 1000,
+      delay: 200,
+      easing: "cubic-bezier(0.5, 0, 0, 1)",
+      interval: 100,
+    });
+
+    ScrollReveal().reveal(".reveal-right", {
+      distance: "30px",
+      origin: "right",
+      duration: 1000,
+      delay: 200,
+      easing: "cubic-bezier(0.5, 0, 0, 1)",
+      interval: 100,
+    });
+  }
+</script>
+
+{% endblock %}

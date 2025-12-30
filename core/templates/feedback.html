@@ -1,0 +1,771 @@
+{% extends "base.html" %} {% block content %}
+
+<style>
+  /* Your existing styles remain the same... */
+
+  /* Star Rating Fix - Outline stars only */
+  .star-container svg {
+    fill: none; /* No fill for outline stars */
+    stroke: #d1d5db; /* Gray border for unselected stars */
+    stroke-width: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .star-label:hover svg {
+    stroke: #fbbf24; /* Amber on hover */
+    transform: scale(1.1);
+  }
+
+  /* Selected star - only outline changes */
+  .star-label input:checked ~ .star-container svg {
+    stroke: #f97316; /* Orange for selected star */
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.4));
+  }
+
+  /* Hover effect for star and previous stars */
+  .star-label:hover ~ .star-label svg {
+    stroke: #fbbf24;
+  }
+</style>
+
+<!-- Background Elements -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+  <div
+    class="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-300/10 rounded-full blur-3xl animate-float"
+  ></div>
+  <div
+    class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-300/10 rounded-full blur-3xl animate-float"
+    style="animation-delay: -3s"
+  ></div>
+</div>
+
+<div class="max-w-3xl mx-auto pt-28 pb-32 px-6">
+  <!-- Header -->
+  <div class="text-center mb-16 fade-in">
+    <div
+      class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200/50 mb-8"
+    >
+      <span
+        class="w-3 h-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 pulse-dot"
+      ></span>
+      <span class="text-orange-600 font-bold text-sm uppercase tracking-widest"
+        >Your Voice Matters</span
+      >
+    </div>
+
+    <h1 class="text-6xl md:text-7xl font-black mb-6">
+      <span class="gradient-text">Share Your Feedback</span>
+    </h1>
+
+    <div class="max-w-2xl mx-auto">
+      <p class="text-xl text-slate-600 font-medium leading-relaxed mb-8">
+        Help us refine and improve the CalmiVerse experience for everyone's
+        mental wellness journey.
+      </p>
+
+      <!-- Stats Bar -->
+      <div
+        class="flex items-center justify-center gap-8 text-sm text-slate-500"
+      >
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          <span>Anonymous & Secure</span>
+        </div>
+        <div class="w-px h-4 bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span>Directly Impacts Features</span>
+        </div>
+        <div class="w-px h-4 bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+          <span>Reviewed Weekly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Form -->
+  <form
+    method="post"
+    class="glass-card rounded-[3rem] p-10 md:p-14 shadow-2xl gradient-border fade-in"
+    style="animation-delay: 0.2s"
+  >
+    {% csrf_token %}
+
+    <!-- Rating Section - Outline Stars -->
+    <div class="text-center mb-12">
+      <div
+        class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 mb-8"
+      >
+        <span
+          class="text-orange-600 font-bold text-sm uppercase tracking-widest"
+          >Overall Experience</span
+        >
+      </div>
+
+      <h3 class="text-2xl font-bold text-slate-800 mb-8">
+        How would you rate your CalmiVerse experience?
+      </h3>
+
+      <div class="flex justify-center gap-4 mb-4">
+        <!-- Star 1 -->
+        <label class="star-label cursor-pointer group" for="star1">
+          <input
+            type="radio"
+            id="star1"
+            name="rating"
+            value="1"
+            class="hidden"
+            required
+          />
+          <div class="star-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-16 h-16 transition-all duration-300"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.021 6.214a1 1 0 00.95.69h6.532c.969 0 1.371 1.24.588 1.81l-5.286 3.842a1 1 0 00-.364 1.118l2.021 6.214c.3.921-.755 1.688-1.54 1.118l-5.286-3.842a1 1 0 00-1.176 0l-5.286 3.842c-.784.57-1.838-.197-1.54-1.118l2.021-6.214a1 1 0 00-.364-1.118L2.98 11.641c-.783-.57-.38-1.81.588-1.81h6.532a1 1 0 00.95-.69l2.021-6.214z"
+              />
+            </svg>
+          </div>
+          <div class="text-sm font-medium text-slate-500 mt-2">Poor</div>
+        </label>
+
+        <!-- Star 2 -->
+        <label class="star-label cursor-pointer group" for="star2">
+          <input
+            type="radio"
+            id="star2"
+            name="rating"
+            value="2"
+            class="hidden"
+            required
+          />
+          <div class="star-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-16 h-16 transition-all duration-300"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.021 6.214a1 1 0 00.95.69h6.532c.969 0 1.371 1.24.588 1.81l-5.286 3.842a1 1 0 00-.364 1.118l2.021 6.214c.3.921-.755 1.688-1.54 1.118l-5.286-3.842a1 1 0 00-1.176 0l-5.286 3.842c-.784.57-1.838-.197-1.54-1.118l2.021-6.214a1 1 0 00-.364-1.118L2.98 11.641c-.783-.57-.38-1.81.588-1.81h6.532a1 1 0 00.95-.69l2.021-6.214z"
+              />
+            </svg>
+          </div>
+          <div class="text-sm font-medium text-slate-500 mt-2">Fair</div>
+        </label>
+
+        <!-- Star 3 -->
+        <label class="star-label cursor-pointer group" for="star3">
+          <input
+            type="radio"
+            id="star3"
+            name="rating"
+            value="3"
+            class="hidden"
+            required
+          />
+          <div class="star-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-16 h-16 transition-all duration-300"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.021 6.214a1 1 0 00.95.69h6.532c.969 0 1.371 1.24.588 1.81l-5.286 3.842a1 1 0 00-.364 1.118l2.021 6.214c.3.921-.755 1.688-1.54 1.118l-5.286-3.842a1 1 0 00-1.176 0l-5.286 3.842c-.784.57-1.838-.197-1.54-1.118l2.021-6.214a1 1 0 00-.364-1.118L2.98 11.641c-.783-.57-.38-1.81.588-1.81h6.532a1 1 0 00.95-.69l2.021-6.214z"
+              />
+            </svg>
+          </div>
+          <div class="text-sm font-medium text-slate-500 mt-2">Good</div>
+        </label>
+
+        <!-- Star 4 -->
+        <label class="star-label cursor-pointer group" for="star4">
+          <input
+            type="radio"
+            id="star4"
+            name="rating"
+            value="4"
+            class="hidden"
+            required
+          />
+          <div class="star-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-16 h-16 transition-all duration-300"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.021 6.214a1 1 0 00.95.69h6.532c.969 0 1.371 1.24.588 1.81l-5.286 3.842a1 1 0 00-.364 1.118l2.021 6.214c.3.921-.755 1.688-1.54 1.118l-5.286-3.842a1 1 0 00-1.176 0l-5.286 3.842c-.784.57-1.838-.197-1.54-1.118l2.021-6.214a1 1 0 00-.364-1.118L2.98 11.641c-.783-.57-.38-1.81.588-1.81h6.532a1 1 0 00.95-.69l2.021-6.214z"
+              />
+            </svg>
+          </div>
+          <div class="text-sm font-medium text-slate-500 mt-2">Great</div>
+        </label>
+
+        <!-- Star 5 -->
+        <label class="star-label cursor-pointer group" for="star5">
+          <input
+            type="radio"
+            id="star5"
+            name="rating"
+            value="5"
+            class="hidden"
+            required
+          />
+          <div class="star-container">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-16 h-16 transition-all duration-300"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.021 6.214a1 1 0 00.95.69h6.532c.969 0 1.371 1.24.588 1.81l-5.286 3.842a1 1 0 00-.364 1.118l2.021 6.214c.3.921-.755 1.688-1.54 1.118l-5.286-3.842a1 1 0 00-1.176 0l-5.286 3.842c-.784.57-1.838-.197-1.54-1.118l2.021-6.214a1 1 0 00-.364-1.118L2.98 11.641c-.783-.57-.38-1.81.588-1.81h6.532a1 1 0 00.95-.69l2.021-6.214z"
+              />
+            </svg>
+          </div>
+          <div class="text-sm font-medium text-slate-500 mt-2">Excellent</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Feedback Text -->
+    <div class="space-y-8">
+      <div class="relative">
+        <div class="flex items-center gap-3 mb-4">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center"
+          >
+            <span class="text-white text-xl">💬</span>
+          </div>
+          <div>
+            <label class="text-lg font-bold text-slate-800 block"
+              >Detailed Feedback</label
+            >
+            <p class="text-slate-500 text-sm">
+              Share your thoughts, suggestions, or any improvements you'd like
+              to see
+            </p>
+          </div>
+        </div>
+
+        <textarea
+          name="message"
+          required
+          class="feedback-input w-full rounded-3xl px-8 py-6 h-48 outline-none focus:outline-none transition-all duration-300 text-slate-700 placeholder:text-slate-400 resize-none"
+          placeholder="What did you love about your experience? What could be improved? How has CalmiVerse helped you?..."
+        ></textarea>
+
+        <div class="absolute right-4 bottom-4 text-slate-400">
+          <span class="text-sm">✍️</span>
+        </div>
+      </div>
+
+      <!-- Category Selection -->
+      <div>
+        <label
+          class="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1 mb-4 block"
+        >
+          What aspect does your feedback relate to?
+        </label>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <label class="relative cursor-pointer">
+            <input
+              type="checkbox"
+              name="categories"
+              value="video"
+              class="hidden peer"
+            />
+            <div
+              class="p-4 rounded-2xl border-2 border-slate-200 text-center hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 peer-checked:border-orange-500 peer-checked:bg-orange-50"
+            >
+              <div class="text-2xl mb-2">🎥</div>
+              <div class="font-medium text-slate-700">Video Therapy</div>
+            </div>
+          </label>
+          <label class="relative cursor-pointer">
+            <input
+              type="checkbox"
+              name="categories"
+              value="ai"
+              class="hidden peer"
+            />
+            <div
+              class="p-4 rounded-2xl border-2 border-slate-200 text-center hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 peer-checked:border-orange-500 peer-checked:bg-orange-50"
+            >
+              <div class="text-2xl mb-2">🤖</div>
+              <div class="font-medium text-slate-700">AI Chat</div>
+            </div>
+          </label>
+          <label class="relative cursor-pointer">
+            <input
+              type="checkbox"
+              name="categories"
+              value="ui"
+              class="hidden peer"
+            />
+            <div
+              class="p-4 rounded-2xl border-2 border-slate-200 text-center hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 peer-checked:border-orange-500 peer-checked:bg-orange-50"
+            >
+              <div class="text-2xl mb-2">🎨</div>
+              <div class="font-medium text-slate-700">Interface</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Privacy Notice -->
+      <div
+        class="text-center p-4 rounded-2xl bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200"
+      >
+        <div
+          class="flex items-center justify-center gap-2 text-sm text-slate-600"
+        >
+          <span class="text-lg">🔒</span>
+          <span class="font-medium"
+            >Your feedback is completely anonymous and securely encrypted</span
+          >
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="relative w-full text-white py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 flex items-center justify-center gap-4 glow-button overflow-hidden"
+      >
+        <span></span>
+        <span>Submit Your Feedback</span>
+        <span class="text-lg"></span>
+        <div
+          class="absolute inset-[2px] rounded-2xl bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 -z-10"
+        ></div>
+      </button>
+    </div>
+  </form>
+
+  <!-- What to Share Section -->
+  <div class="mt-16 fade-in" style="animation-delay: 0.4s">
+    <div class="bento-info rounded-[2.5rem] p-10 border border-slate-100">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="relative">
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center"
+          >
+            <span class="text-white text-xl"></span>
+          </div>
+          <div
+            class="absolute -inset-2 rounded-xl bg-orange-500/20 blur-md"
+          ></div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-slate-900">
+            What can you share?
+          </h3>
+          <p class="text-slate-500">
+            Your insights help us improve every aspect of CalmiVerse
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center text-orange-600 flex-shrink-0"
+            >
+              <span class="text-sm">🟢</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">Feature Suggestions</h4>
+              <p class="text-slate-600 text-sm">
+                What new features would help you most?
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center text-orange-600 flex-shrink-0"
+            >
+              <span class="text-sm">🟢</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">Video Content</h4>
+              <p class="text-slate-600 text-sm">
+                Suggest topics or formats for therapy videos
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center text-orange-600 flex-shrink-0"
+            >
+              <span class="text-sm">🟢</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">AI Interactions</h4>
+              <p class="text-slate-600 text-sm">
+                How can our AI be more helpful and empathetic?
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center text-orange-600 flex-shrink-0"
+            >
+              <span class="text-sm">🟢</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">User Experience</h4>
+              <p class="text-slate-600 text-sm">
+                Navigation, design, and overall ease of use
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer
+  class="relative bg-gradient-to-b from-white via-white/95 to-teal-50/30 border-t border-slate-200/50"
+>
+  <!-- Decorative Elements -->
+  <div
+    class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-400/50 to-transparent"
+  ></div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <!-- Brand Section -->
+      <div class="lg:col-span-4">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="relative">
+            <div
+              class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg"
+            >
+              <span class="text-white text-xl font-bold">AI</span>
+            </div>
+            <div
+              class="absolute -inset-2 rounded-xl bg-teal-500/20 blur-md"
+            ></div>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-slate-900">CalmiVerse</h3>
+            <p class="text-sm text-teal-600 font-semibold">
+              Mental Wellness Platform
+            </p>
+          </div>
+        </div>
+        <p class="text-slate-600 leading-relaxed pr-10">
+          Revolutionizing mental health support through AI-driven therapy,
+          compassionate companionship, and immediate crisis intervention — all
+          while prioritizing your privacy and emotional safety.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="lg:col-span-2">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-teal-500 rounded-full"></span>
+          Navigation
+        </h4>
+        <ul class="space-y-4">
+          <li>
+            <a
+              href="/dashboard/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a
+              href="/therapy/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Therapy
+            </a>
+          </li>
+          <li>
+            <a
+              href="/ai/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              AI Chat
+            </a>
+          </li>
+          <li>
+            <a
+              href="/sos/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Emergency SOS
+            </a>
+          </li>
+          <li>
+            <a
+              href="/feedback/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Feedback
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="lg:col-span-3">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-cyan-500 rounded-full"></span>
+          Why Trust Us
+        </h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-cyan-600 mb-2">Security</div>
+            <div class="text-sm font-semibold text-slate-700">
+              End-to-End Encrypted
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-teal-600 mb-2">Evidence</div>
+            <div class="text-sm font-semibold text-slate-700">
+              Evidence-Based
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-blue-600 mb-2">24/7</div>
+            <div class="text-sm font-semibold text-slate-700">
+              24/7 Available
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-violet-600 mb-2">Safe</div>
+            <div class="text-sm font-semibold text-slate-700">No Judgment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Actions -->
+      <div class="lg:col-span-3">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+          Your Account
+        </h4>
+
+        <div class="space-y-6">
+          <!-- User Info -->
+          <div class="p-5 rounded-2xl glass-container">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold"
+              >
+                {{ request.user.username|first|upper }}
+              </div>
+              <div>
+                <div class="font-semibold text-slate-800">
+                  {{ request.user.username }}
+                </div>
+                <div class="text-sm text-slate-500">Premium Member</div>
+              </div>
+            </div>
+            <div class="text-xs text-slate-500">Last login: Today</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-3">
+            <a
+              href="/logout/"
+              class="block w-full py-3 px-6 rounded-xl bg-gradient-to-r from-white to-slate-50 border border-slate-300 text-slate-700 font-semibold text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Sign Out
+            </a>
+
+            <div
+              class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500/10 to-cyan-500/10 p-5 border border-teal-200/50"
+            >
+              <div
+                class="absolute top-0 right-0 w-20 h-20 bg-teal-400/10 rounded-full -translate-y-6 translate-x-6"
+              ></div>
+              <div class="relative">
+                <div class="text-teal-600 font-bold text-lg mb-2">
+                  Emergency
+                </div>
+                <div class="font-bold text-slate-800 text-sm mb-1">
+                  Need Immediate Help?
+                </div>
+                <a
+                  href="/sos/"
+                  class="text-teal-600 font-semibold text-sm hover:underline flex items-center gap-1"
+                >
+                  Go to SOS Protocol
+                  <span class="text-lg">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div
+      class="my-10 h-px bg-gradient-to-r from-transparent via-slate-300/50 to-transparent"
+    ></div>
+
+    <!-- Bottom Bar -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="text-slate-500 text-sm">
+        © 2024 <span class="font-bold text-slate-700">CalmiVerse</span>
+        · Built for mental wellness · All rights reserved
+      </div>
+
+      <div class="flex items-center gap-6 text-sm text-slate-500">
+        <a href="/privacy_policy/" class="hover:text-teal-600 transition-colors"
+          >Privacy Policy</a
+        >
+        <a
+          href="/terms_of_service/"
+          class="hover:text-teal-600 transition-colors"
+          >Terms of Service</a
+        >
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Star rating interaction for outline stars
+  const starInputs = document.querySelectorAll('input[name="rating"]');
+
+  starInputs.forEach((input) => {
+    input.addEventListener("change", function () {
+      // Remove all selection effects first
+      document.querySelectorAll(".star-container svg").forEach((svg) => {
+        svg.style.stroke = "#d1d5db";
+        svg.style.strokeWidth = "2px";
+        svg.style.filter = "none";
+      });
+
+      // Highlight selected star
+      const selectedStar = this.nextElementSibling.querySelector("svg");
+      selectedStar.style.stroke = "#f97316";
+      selectedStar.style.strokeWidth = "3px";
+      selectedStar.style.filter =
+        "drop-shadow(0 0 12px rgba(249, 115, 22, 0.4))";
+
+      // Add pulse animation
+      selectedStar.style.transform = "scale(1.2)";
+      setTimeout(() => {
+        selectedStar.style.transform = "scale(1)";
+      }, 300);
+    });
+
+    // Hover effects
+    input.addEventListener("mouseenter", function () {
+      const label = this.closest(".star-label");
+      const svg = label.querySelector("svg");
+      svg.style.stroke = "#fbbf24";
+    });
+
+    input.addEventListener("mouseleave", function () {
+      if (!this.checked) {
+        const label = this.closest(".star-label");
+        const svg = label.querySelector("svg");
+        svg.style.stroke = "#d1d5db";
+      }
+    });
+  });
+
+  // Form submission
+  const form = document.querySelector("form");
+  form.addEventListener("submit", function (e) {
+    const rating = document.querySelector('input[name="rating"]:checked');
+    const message = document
+      .querySelector('textarea[name="message"]')
+      .value.trim();
+
+    if (!rating) {
+      e.preventDefault();
+      alert("Please select a rating before submitting.");
+      return;
+    }
+
+    if (!message) {
+      e.preventDefault();
+      alert("Please share your feedback before submitting.");
+      return;
+    }
+
+    // Show success message
+    const successMessage = document.createElement("div");
+    successMessage.className =
+      "fixed inset-0 flex items-center justify-center bg-black/50 z-50";
+    successMessage.innerHTML = `
+      <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
+        <p class="text-slate-600 mb-6">Your feedback has been submitted successfully.</p>
+        <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-xl font-bold hover:shadow-lg transition">
+          Continue
+        </button>
+      </div>
+    `;
+    document.body.appendChild(successMessage);
+  });
+
+  // Auto-resize textarea
+  const textarea = document.querySelector('textarea[name="message"]');
+  textarea.addEventListener("input", function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
+</script>
+
+{% endblock %}

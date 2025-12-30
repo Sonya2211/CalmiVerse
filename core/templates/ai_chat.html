@@ -1,0 +1,759 @@
+{% extends "base.html" %} {% block content %}
+
+<style>
+  .chat-glass {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.95)
+    );
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 60px rgba(20, 184, 166, 0.05);
+  }
+
+  .message-bubble {
+    animation: messageIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes messageIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .typing span {
+    animation: blink 1.4s infinite both;
+    display: inline-block;
+  }
+  .typing span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .typing span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #0f766e, #0e7490, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(white, white) padding-box,
+      linear-gradient(135deg, #0ea5e9, #10b981, #6366f1) border-box;
+    border: 2px solid transparent;
+  }
+
+  .pulse-dot {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.2);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .glow-button {
+    background: linear-gradient(135deg, #0f766e, #0e7490, #7c3aed);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glow-button::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent 30%
+    );
+    animation: rotate 4s linear infinite;
+  }
+
+  .glow-button span {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Chat specific styles */
+  .ai-avatar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  }
+
+  .user-avatar {
+    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+    box-shadow: 0 8px 32px rgba(20, 184, 166, 0.3);
+  }
+
+  .ai-bubble {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .user-bubble {
+    background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    box-shadow: 0 4px 20px rgba(15, 118, 110, 0.2);
+  }
+
+  .typing-bubble {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .chat-input {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.95)
+    );
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .chat-input:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1),
+      0 8px 32px rgba(20, 184, 166, 0.15);
+  }
+</style>
+
+<!-- Background Elements -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+  <div
+    class="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-300/10 rounded-full blur-3xl animate-float"
+  ></div>
+  <div
+    class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-300/10 rounded-full blur-3xl animate-float"
+    style="animation-delay: -3s"
+  ></div>
+</div>
+
+<div class="max-w-4xl mx-auto px-6 pt-28 pb-20">
+  <!-- Header -->
+  <div class="text-center mb-12 fade-in">
+    <div
+      class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200/50 mb-8"
+    >
+      <span
+        class="w-3 h-3 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 pulse-dot"
+      ></span>
+      <span class="text-teal-600 font-bold text-sm uppercase tracking-widest"
+        >AI Companion</span
+      >
+    </div>
+
+    <h1 class="text-6xl md:text-7xl font-black mb-6">
+      <span class="gradient-text">AI Chat Support</span>
+    </h1>
+
+    <div class="max-w-2xl mx-auto">
+      <p class="text-xl text-slate-600 font-medium leading-relaxed mb-8">
+        Your empathetic AI companion, always ready to listen and provide
+        compassionate support
+      </p>
+
+      <!-- Stats Bar -->
+      <div
+        class="flex items-center justify-center gap-8 text-sm text-slate-500"
+      >
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          <span>Always Available</span>
+        </div>
+        <div class="w-px h-4 bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          <span>Non-Judgmental</span>
+        </div>
+        <div class="w-px h-4 bg-slate-300"></div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+          <span>Confidential</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
+  <div
+    class="chat-glass rounded-[2.5rem] shadow-2xl overflow-hidden gradient-border fade-in"
+  >
+    <!-- Chat Header -->
+    <div
+      class="px-8 py-6 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100/50"
+    >
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg"
+          >
+            <span class="text-xl">🤖</span>
+          </div>
+          <div
+            class="absolute -inset-2 rounded-xl bg-teal-500/20 blur-md"
+          ></div>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">CalmiVerse Companion</h3>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span class="text-sm text-slate-500">Online & Ready to Listen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div
+      id="chat-box"
+      class="p-8 space-y-6 min-h-[400px] max-h-[500px] overflow-y-auto bg-gradient-to-b from-white/50 to-slate-50/50"
+    >
+      <!-- Initial AI message -->
+      <div class="flex gap-4 max-w-[85%] message-bubble">
+        <div
+          class="w-10 h-10 rounded-full ai-avatar flex items-center justify-center text-white font-bold shadow-lg"
+        >
+          AI
+        </div>
+        <div class="ai-bubble rounded-2xl px-6 py-4 max-w-[85%]">
+          <div class="text-slate-800 font-medium mb-1">CalmiVerse</div>
+          <div class="text-slate-700 leading-relaxed">
+            Hello! I'm your CalmiVerse companion. I'm here to listen, support,
+            and help you navigate through your thoughts and feelings. How are
+            you feeling today? 💭
+          </div>
+          <div class="text-xs text-slate-400 mt-2">Just now</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div
+      class="p-6 bg-gradient-to-r from-white/80 to-slate-50/80 border-t border-slate-200/50"
+    >
+      <form id="chat-form" class="relative flex gap-3">
+        {% csrf_token %}
+        <div class="flex-1 relative">
+          <textarea
+            id="message"
+            rows="1"
+            placeholder="Share what's on your mind..."
+            class="chat-input w-full resize-none rounded-3xl px-6 py-4 pr-12 outline-none focus:outline-none transition-all duration-300 text-slate-700 placeholder:text-slate-400"
+            required
+          ></textarea>
+          <div
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400"
+          >
+            <span class="text-lg">💬</span>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="relative px-8 py-4 text-white rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 glow-button overflow-hidden"
+        >
+          <span>Send</span>
+          <span class="text-lg"></span>
+          <div
+            class="absolute inset-[2px] rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 -z-10"
+          ></div>
+        </button>
+      </form>
+
+      <!-- Quick Suggestions -->
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="quick-suggest px-4 py-2 rounded-full bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 text-slate-600 text-sm hover:bg-slate-200 transition-all hover:scale-105"
+          data-text="I'm feeling anxious today"
+        >
+          😰 Feeling anxious
+        </button>
+        <button
+          type="button"
+          class="quick-suggest px-4 py-2 rounded-full bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 text-slate-600 text-sm hover:bg-slate-200 transition-all hover:scale-105"
+          data-text="I'm having trouble sleeping"
+        >
+          😴 Sleep issues
+        </button>
+        <button
+          type="button"
+          class="quick-suggest px-4 py-2 rounded-full bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 text-slate-600 text-sm hover:bg-slate-200 transition-all hover:scale-105"
+          data-text="I need motivation"
+        >
+          💪 Need motivation
+        </button>
+        <button
+          type="button"
+          class="quick-suggest px-4 py-2 rounded-full bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 text-slate-600 text-sm hover:bg-slate-200 transition-all hover:scale-105"
+          data-text="I'm feeling overwhelmed"
+        >
+          😓 Feeling overwhelmed
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer
+  class="relative bg-gradient-to-b from-white via-white/95 to-teal-50/30 border-t border-slate-200/50"
+>
+  <!-- Decorative Elements -->
+  <div
+    class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-400/50 to-transparent"
+  ></div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <!-- Brand Section -->
+      <div class="lg:col-span-4">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="relative">
+            <div
+              class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg"
+            >
+              <span class="text-white text-xl font-bold">AI</span>
+            </div>
+            <div
+              class="absolute -inset-2 rounded-xl bg-teal-500/20 blur-md"
+            ></div>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-slate-900">CalmiVerse</h3>
+            <p class="text-sm text-teal-600 font-semibold">
+              Mental Wellness Platform
+            </p>
+          </div>
+        </div>
+        <p class="text-slate-600 leading-relaxed pr-10">
+          Revolutionizing mental health support through AI-driven therapy,
+          compassionate companionship, and immediate crisis intervention — all
+          while prioritizing your privacy and emotional safety.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="lg:col-span-2">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-teal-500 rounded-full"></span>
+          Navigation
+        </h4>
+        <ul class="space-y-4">
+          <li>
+            <a
+              href="/dashboard/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a
+              href="/therapy/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Therapy
+            </a>
+          </li>
+          <li>
+            <a
+              href="/ai/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              AI Chat
+            </a>
+          </li>
+          <li>
+            <a
+              href="/sos/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Emergency SOS
+            </a>
+          </li>
+          <li>
+            <a
+              href="/feedback/"
+              class="text-slate-600 hover:text-teal-600 font-medium transition-all duration-300 flex items-center gap-3 group"
+            >
+              <span
+                class="w-1 h-1 bg-teal-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              ></span>
+              Feedback
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="lg:col-span-3">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-cyan-500 rounded-full"></span>
+          Why Trust Us
+        </h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-cyan-600 mb-2">Security</div>
+            <div class="text-sm font-semibold text-slate-700">
+              End-to-End Encrypted
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-teal-600 mb-2">Evidence</div>
+            <div class="text-sm font-semibold text-slate-700">
+              Evidence-Based
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-blue-600 mb-2">24/7</div>
+            <div class="text-sm font-semibold text-slate-700">
+              24/7 Available
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200"
+          >
+            <div class="text-xl font-bold text-violet-600 mb-2">Safe</div>
+            <div class="text-sm font-semibold text-slate-700">No Judgment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Actions -->
+      <div class="lg:col-span-3">
+        <h4
+          class="text-sm font-bold text-slate-800 mb-6 uppercase tracking-wider flex items-center gap-2"
+        >
+          <span class="w-2 h-2 bg-rose-500 rounded-full"></span>
+          Your Account
+        </h4>
+
+        <div class="space-y-6">
+          <!-- User Info -->
+          <div class="p-5 rounded-2xl glass-container">
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold"
+              >
+                {{ request.user.username|first|upper }}
+              </div>
+              <div>
+                <div class="font-semibold text-slate-800">
+                  {{ request.user.username }}
+                </div>
+                <div class="text-sm text-slate-500">Premium Member</div>
+              </div>
+            </div>
+            <div class="text-xs text-slate-500">Last login: Today</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-3">
+            <a
+              href="/logout/"
+              class="block w-full py-3 px-6 rounded-xl bg-gradient-to-r from-white to-slate-50 border border-slate-300 text-slate-700 font-semibold text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Sign Out
+            </a>
+
+            <div
+              class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500/10 to-cyan-500/10 p-5 border border-teal-200/50"
+            >
+              <div
+                class="absolute top-0 right-0 w-20 h-20 bg-teal-400/10 rounded-full -translate-y-6 translate-x-6"
+              ></div>
+              <div class="relative">
+                <div class="text-teal-600 font-bold text-lg mb-2">
+                  Emergency
+                </div>
+                <div class="font-bold text-slate-800 text-sm mb-1">
+                  Need Immediate Help?
+                </div>
+                <a
+                  href="/sos/"
+                  class="text-teal-600 font-semibold text-sm hover:underline flex items-center gap-1"
+                >
+                  Go to SOS Protocol
+                  <span class="text-lg">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div
+      class="my-10 h-px bg-gradient-to-r from-transparent via-slate-300/50 to-transparent"
+    ></div>
+
+    <!-- Bottom Bar -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="text-slate-500 text-sm">
+        © 2024 <span class="font-bold text-slate-700">CalmiVerse</span>
+        · Built for mental wellness · All rights reserved
+      </div>
+
+      <div class="flex items-center gap-6 text-sm text-slate-500">
+        <a href="/privacy_policy/" class="hover:text-teal-600 transition-colors"
+          >Privacy Policy</a
+        >
+        <a
+          href="/terms_of_service/"
+          class="hover:text-teal-600 transition-colors"
+          >Terms of Service</a
+        >
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const form = document.getElementById("chat-form");
+  const chatBox = document.getElementById("chat-box");
+  const messageInput = document.getElementById("message");
+
+  // Quick suggestion buttons
+  document.querySelectorAll(".quick-suggest").forEach((button) => {
+    button.addEventListener("click", () => {
+      messageInput.value = button.getAttribute("data-text");
+      messageInput.focus();
+      // Add visual feedback
+      button.classList.add("bg-teal-100", "border-teal-300", "text-teal-700");
+      setTimeout(() => {
+        button.classList.remove(
+          "bg-teal-100",
+          "border-teal-300",
+          "text-teal-700"
+        );
+      }, 500);
+    });
+  });
+
+  // Auto-resize textarea
+  messageInput.addEventListener("input", function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    // Reset textarea height
+    messageInput.style.height = "auto";
+
+    // USER MESSAGE
+    const userMessageTime = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    chatBox.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="flex flex-row-reverse gap-4 max-w-[85%] ml-auto message-bubble">
+        <div class="w-10 h-10 rounded-full user-avatar flex items-center justify-center text-white font-bold shadow-lg">
+          YOU
+        </div>
+        <div class="user-bubble rounded-2xl px-6 py-4 max-w-[85%]">
+          <div class="text-white/90 font-medium mb-1">You</div>
+          <div class="text-white leading-relaxed">${message.replace(
+            /\n/g,
+            "<br>"
+          )}</div>
+          <div class="text-white/70 text-xs mt-2">${userMessageTime}</div>
+        </div>
+      </div>
+      `
+    );
+
+    messageInput.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // TYPING INDICATOR
+    const typing = document.createElement("div");
+    typing.className = "flex gap-4 max-w-[85%] message-bubble";
+    typing.innerHTML = `
+      <div class="w-10 h-10 rounded-full ai-avatar flex items-center justify-center text-white font-bold shadow-lg">
+        AI
+      </div>
+      <div class="typing-bubble rounded-2xl px-6 py-4">
+        <div class="text-slate-800 font-medium mb-1">CalmiVerse</div>
+        <div class="typing text-slate-600">
+          <span>.</span><span>.</span><span>.</span>
+        </div>
+      </div>
+    `;
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // SEND REQUEST
+    const formData = new FormData();
+    formData.append("message", message);
+    formData.append(
+      "csrfmiddlewaretoken",
+      document.querySelector("[name=csrfmiddlewaretoken]").value
+    );
+
+    try {
+      const res = await fetch("/ai/", {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+      });
+
+      const data = await res.json();
+      typing.remove();
+
+      if (data.reply) {
+        const aiMessageTime = new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        chatBox.insertAdjacentHTML(
+          "beforeend",
+          `
+          <div class="flex gap-4 max-w-[85%] message-bubble">
+            <div class="w-10 h-10 rounded-full ai-avatar flex items-center justify-center text-white font-bold shadow-lg">
+              AI
+            </div>
+            <div class="ai-bubble rounded-2xl px-6 py-4 max-w-[85%]">
+              <div class="text-slate-800 font-medium mb-1">CalmiVerse</div>
+              <div class="text-slate-700 leading-relaxed">${data.reply.replace(
+                /\n/g,
+                "<br>"
+              )}</div>
+              <div class="text-slate-400 text-xs mt-2">${aiMessageTime}</div>
+            </div>
+          </div>
+          `
+        );
+      } else {
+        chatBox.insertAdjacentHTML(
+          "beforeend",
+          `<div class="text-red-500 bg-red-50 px-4 py-2 rounded-xl">AI service is temporarily unavailable. Please try again later.</div>`
+        );
+      }
+    } catch (err) {
+      typing.remove();
+      chatBox.insertAdjacentHTML(
+        "beforeend",
+        `<div class="text-red-500 bg-red-50 px-4 py-2 rounded-xl">Network error. Please check your connection and try again.</div>`
+      );
+    }
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  // Add enter key support (shift+enter for new line)
+  messageInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      form.dispatchEvent(new Event("submit"));
+    }
+  });
+
+  // Smooth scroll to bottom on load
+  setTimeout(() => {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 100);
+</script>
+
+{% endblock %}

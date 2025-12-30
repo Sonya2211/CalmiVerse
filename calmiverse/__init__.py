@@ -1,0 +1,1 @@
+"""CalmiVerse Django project package."""

@@ -1,0 +1,210 @@
+{% extends "base.html" %} {% block content %}
+
+<style>
+  body {
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .image-card {
+    transition: all 0.4s ease;
+    cursor: zoom-in;
+  }
+
+  .image-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .music-bar {
+    position: sticky;
+    top: 80px;
+    z-index: 20;
+  }
+
+  /* IMAGE MODAL */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+
+  .modal img {
+    max-height: 90vh;
+    max-width: 90vw;
+    border-radius: 20px;
+  }
+</style>
+
+<div class="max-w-6xl mx-auto px-6 pt-24 pb-20">
+  <!-- HEADER -->
+  <div class="text-center mb-16">
+    <h1 class="text-6xl font-black mb-4 text-teal-600">
+      Music & Visual Therapy
+    </h1>
+    <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+      Calming music combined with soothing imagery — personalized just for you.
+    </p>
+  </div>
+
+  <!-- ================= FILTER FORM ================= -->
+  <form method="post" class="glass rounded-3xl p-10 mb-16">
+    {% csrf_token %}
+
+    <!-- AGE -->
+    <div class="mb-8">
+      <label class="block font-bold mb-2 text-slate-700">Your Age</label>
+      <input
+        type="number"
+        name="age"
+        required
+        min="7"
+        max="100"
+        placeholder="Enter your age"
+        class="w-full px-6 py-4 rounded-xl border focus:ring-2 focus:ring-teal-500 outline-none"
+      />
+    </div>
+
+    <!-- ISSUES -->
+    <div class="mb-8">
+      <label class="block font-bold mb-4 text-slate-700">
+        Select what you’re feeling
+      </label>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for issue in issues %}
+        <label class="cursor-pointer">
+          <input
+            type="checkbox"
+            name="issues"
+            value="{{ issue.id }}"
+            class="hidden peer"
+          />
+          <div
+            class="p-5 rounded-xl border peer-checked:border-teal-500 peer-checked:bg-teal-50 transition"
+          >
+            <span class="font-semibold text-slate-700">{{ issue.name }}</span>
+          </div>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full py-5 rounded-xl bg-teal-500 text-white font-bold text-lg hover:bg-teal-600 transition"
+    >
+      Start Therapy Session
+    </button>
+  </form>
+
+  <!-- ================= MUSIC PLAYER ================= -->
+  {% if music_list %}
+  <div class="music-bar glass rounded-2xl p-6 mb-10">
+    <h3 class="font-bold text-slate-800 text-lg mb-4">🎵 Therapy Music</h3>
+
+    <audio id="bgMusic" controls autoplay loop class="w-full mb-4">
+      <source src="{{ music_list.0.audio.url }}" type="audio/mpeg" />
+    </audio>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      {% for music in music_list %}
+      <button
+        onclick="playMusic('{{ music.audio.url }}','{{ music.title }}')"
+        class="text-left px-4 py-3 rounded-xl border hover:bg-teal-50 transition"
+      >
+        🎶 {{ music.title }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ================= PRECAUTIONS ================= -->
+  <div
+    class="glass rounded-3xl p-8 mb-16 border-l-4 border-teal-500 bg-gradient-to-r from-teal-50 to-white"
+  >
+    <h3 class="text-2xl font-black text-slate-800 mb-4">
+      ⚠️ Precautions While Listening to Binaural Beats
+    </h3>
+
+    <ul class="space-y-3 text-slate-700">
+      <li>🛑 Use proper <strong>stereo headphones</strong> for best effect</li>
+      <li>🛑Keep the volume <strong>low to moderate</strong></li>
+      <li>🛑 Choose the <strong>right frequency</strong> for your goal</li>
+      <li>
+        🛑 Do <strong>not</strong> use while driving or operating machinery
+      </li>
+      <li>🛑 Stop immediately if you feel dizziness or discomfort</li>
+      <li>🛑Listen in a <strong>safe, calm environment</strong></li>
+      <li>
+        🛑Avoid stimulating beats (Beta/Gamma) before sleep — they may disturb
+        sleep cycles
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- ================= IMAGE GALLERY ================= -->
+  {% if image_list %}
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+    {% for img in image_list %}
+    <div
+      class="image-card rounded-3xl overflow-hidden shadow-lg bg-white"
+      onclick="openModal('{{ img.image.url }}')"
+    >
+      <img
+        src="{{ img.image.url }}"
+        alt="Therapy image"
+        class="w-full h-72 object-cover"
+      />
+      <div class="p-5">
+        <h4 class="font-bold text-slate-800">{{ img.title }}</h4>
+        <p class="text-slate-500 text-sm mt-1">
+          {{ img.description|default:"Relax and observe calmly" }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- IMAGE MODAL -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <img id="modalImg" />
+</div>
+
+<script>
+  const bgMusic = document.getElementById("bgMusic");
+
+  function playMusic(src) {
+    bgMusic.src = src;
+    bgMusic.play();
+  }
+
+  bgMusic && (bgMusic.volume = 0.6);
+
+  function openModal(src) {
+    document.getElementById("modalImg").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("imageModal").style.display = "none";
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CalmiVerse</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Global Styles -->
+    <style>
+      body {
+        background: linear-gradient(180deg, #f7fbfb, #eefafa);
+        font-family: "Inter", sans-serif;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #14b8a6;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen text-slate-800">
+    <!-- ================= TOP NAV ================= -->
+    <nav
+      class="bg-white/90 backdrop-blur shadow-sm px-8 py-4 flex justify-between items-center"
+    >
+      <!-- Brand -->
+      <div class="flex items-center gap-3 text-teal-600 font-bold text-xl">
+        <div
+          class="w-9 h-9 bg-gradient-to-br from-teal-500 to-cyan-500 text-white rounded-full flex items-center justify-center shadow"
+        >
+          ♥
+        </div>
+        CalmiVerse
+      </div>
+
+      <!-- User -->
+      <div class="flex items-center gap-6 text-sm text-slate-600 font-medium">
+        <span>Welcome, {{ request.user.username }}</span>
+        <a
+          href="/logout/"
+          class="flex items-center gap-1 hover:text-red-500 transition"
+        >
+          <i data-feather="log-out" class="w-4"></i>
+          Logout
+        </a>
+      </div>
+    </nav>
+
+    <!-- ================= TABS ================= -->
+    <div class="bg-white/70 backdrop-blur border-b border-slate-200">
+      <div class="flex gap-10 px-10 py-4 text-sm font-semibold text-slate-600">
+        <a href="/dashboard/" class="nav-link">
+          <i data-feather="info" class="w-4"></i>
+          Info
+        </a>
+
+        <!-- UPDATED: Therapy = Music + Images -->
+        <a href="/therapy/" class="nav-link">
+          <i data-feather="headphones" class="w-4"></i>
+          Therapy
+        </a>
+
+        <a href="/ai/" class="nav-link">
+          <i data-feather="message-circle" class="w-4"></i>
+          AI Chat
+        </a>
+
+        <a href="/sos/" class="nav-link">
+          <i data-feather="phone" class="w-4"></i>
+          SOS
+        </a>
+
+        <a href="/feedback/" class="nav-link">
+          <i data-feather="star" class="w-4"></i>
+          Feedback
+        </a>
+      </div>
+    </div>
+
+    <!-- ================= CONTENT ================= -->
+    <main class="px-10 py-10">{% block content %}{% endblock %}</main>
+
+    <!-- Icons Init -->
+    <script>
+      feather.replace();
+    </script>
+  </body>
+</html>

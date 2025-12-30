@@ -7,7 +7,13 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "calmiverse.onrender.com",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
+
 
 # --------------------------------------------------
 # BASE DIR

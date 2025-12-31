@@ -11,6 +11,7 @@ class MentalHealthIssue(models.Model):
     def __str__(self):
         return self.name
 
+image = models.CharField(max_length=255, default="images/profilepicture.jpeg")
 
 # =========================
 # MUSIC THERAPY

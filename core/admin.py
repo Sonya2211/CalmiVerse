@@ -16,6 +16,8 @@ class MentalHealthIssueAdmin(admin.ModelAdmin):
     list_display = ("id", "name")
     search_fields = ("name",)
 
+# core/admin.py
+admin.site.register(SiteProfile)
 
 # =========================
 # MUSIC THERAPY

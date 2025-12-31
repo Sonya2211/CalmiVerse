@@ -6,6 +6,8 @@ Production-ready (Render + Cloudinary)
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
+import cloudinary
 
 # --------------------------------------------------
 # BASE DIR
@@ -53,6 +55,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local app
     "core",
+    # Static handling
+    "whitenoise.runserver_nostatic",
     # Cloudinary
     "cloudinary",
     "cloudinary_storage",
@@ -63,6 +67,7 @@ INSTALLED_APPS = [
 # --------------------------------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -83,7 +88,7 @@ WSGI_APPLICATION = "calmiverse.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],  # app templates only
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -99,16 +104,9 @@ TEMPLATES = [
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
-# --------------------------------------------------
-# DATABASE
-# --------------------------------------------------
-
-import dj_database_url
-
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
-    # Production (Render / PostgreSQL)
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
@@ -117,14 +115,12 @@ if DATABASE_URL:
         )
     }
 else:
-    # Local development (SQLite)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 
 # --------------------------------------------------
 # PASSWORD VALIDATION
@@ -147,27 +143,17 @@ USE_I18N = True
 USE_TZ = True
 
 # --------------------------------------------------
-# STATIC FILES (CSS / JS ONLY)
+# STATIC FILES
 # --------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # --------------------------------------------------
-# ❌ NO MEDIA ROOT (RENDER HAS NO DISK)
-# --------------------------------------------------
-# MEDIA_URL ❌
-# MEDIA_ROOT ❌
-
-# --------------------------------------------------
-# CLOUDINARY (ALL UPLOADS)
+# MEDIA → CLOUDINARY ONLY
 # --------------------------------------------------
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-import cloudinary
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -177,14 +163,14 @@ cloudinary.config(
 )
 
 # --------------------------------------------------
-# AUTH SETTINGS
+# AUTH
 # --------------------------------------------------
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
 
 # --------------------------------------------------
-# DEFAULT PRIMARY KEY
+# DEFAULT PK
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

@@ -5,8 +5,5 @@ __pycache__/
 # Env
 .env
 
-# Static build
-staticfiles/
-
 # Media
 media/

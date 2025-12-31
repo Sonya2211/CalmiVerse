@@ -15,6 +15,9 @@ from .models import (
     TherapyImage,
 )
 
+def home(request):
+    profile = SiteProfile.objects.first()
+    return render(request, "home.html", {"profile": profile})
 
 # =========================
 # HOME (PUBLIC LANDING PAGE)

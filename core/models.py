@@ -43,16 +43,6 @@ class TherapyImage(models.Model):
     def __str__(self):
         return self.title
 
-# core/models.py
-class SiteProfile(models.Model):
-    name = models.CharField(max_length=100)
-    qualification = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    image = models.ImageField(upload_to="profile/")
-
-    def __str__(self):
-        return self.name
-
 # =========================
 # EMERGENCY CONTACTS
 # =========================

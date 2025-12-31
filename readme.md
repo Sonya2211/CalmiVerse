@@ -82,9 +82,8 @@ This project was built as a **research-driven mental health platform** focusing 
 | Backend       | Django (Python)                  |
 | Frontend      | HTML, CSS (Tailwind), JavaScript |
 | Database      | SQLite                           |
-| Media Storage | Cloudinary (Free Tier)           |
+| Media Storage | Cloudinary                       |
 | AI            | Hugging Face API                 |
-| Hosting       | Render (Free Tier)               |
 
 ---
 
@@ -167,3 +166,4 @@ No part of this project may be copied, modified, distributed, or used for commer
 
 
 Just tell me 👍
+

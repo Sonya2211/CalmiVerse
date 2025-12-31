@@ -25,8 +25,13 @@ SECRET_KEY = "django-insecure-^vc*@bpk*jgmbeiflduxwakfejpm)rsx^b2l3^ex*9p45&6^-3
 DEBUG = False
 
 ALLOWED_HOSTS = [
+<<<<<<< HEAD
     "calmiverse.onrender.com",
     ".onrender.com",
+=======
+    ".onrender.com",
+    "127.0.0.1",
+>>>>>>> bd47469 (files updated)
     "localhost",
     "127.0.0.1",
 ]

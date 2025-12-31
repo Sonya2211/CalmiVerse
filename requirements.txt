@@ -1,14 +1,21 @@
 Django==4.2.7
 gunicorn==21.2.0
-requests==2.32.3
-python-dotenv==1.0.1
-Pillow==10.2.0
 
-# HuggingFace API (no local ML)
-huggingface-hub==0.28.1
-cloudinary
-django-cloudinary-storage
-dj-database-url
-psycopg2-binary
+# Database
+dj-database-url==2.1.0
+psycopg2-binary==2.9.9
+
+# Static files
 whitenoise==6.6.0
 
+# Media storage
+cloudinary==1.40.0
+django-cloudinary-storage==0.3.0
+Pillow==10.2.0
+
+# Environment & HTTP
+python-dotenv==1.0.1
+requests==2.32.3
+
+# AI (HuggingFace – API only)
+huggingface-hub==0.28.1

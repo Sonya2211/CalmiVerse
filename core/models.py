@@ -11,7 +11,9 @@ class MentalHealthIssue(models.Model):
     def __str__(self):
         return self.name
 
+
 image = models.CharField(max_length=255, default="images/profilepicture.jpeg")
+
 
 # =========================
 # MUSIC THERAPY
@@ -44,6 +46,7 @@ class TherapyImage(models.Model):
     def __str__(self):
         return self.title
 
+
 # =========================
 # EMERGENCY CONTACTS
 # =========================
@@ -65,3 +68,22 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.rating}/5"
+
+
+from cloudinary.models import CloudinaryField
+
+
+class TherapyMusic(models.Model):
+    title = models.CharField(max_length=100)
+    audio = CloudinaryField(resource_type="video")  # audio uses video
+    min_age = models.IntegerField()
+    max_age = models.IntegerField()
+    issues = models.ManyToManyField(MentalHealthIssue)
+    duration = models.PositiveIntegerField(null=True, blank=True)
+
+
+class TherapyImage(models.Model):
+    image = CloudinaryField("image")
+    min_age = models.IntegerField()
+    max_age = models.IntegerField()
+    issues = models.ManyToManyField(MentalHealthIssue)

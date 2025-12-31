@@ -6,3 +6,4 @@ Pillow==10.2.0
 
 # HuggingFace API (no local ML)
 huggingface-hub==0.28.1
+pip install cloudinary django-cloudinary-storage
